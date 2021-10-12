@@ -1,17 +1,13 @@
-/**
- * @fileoverview Criação do schema de validação para criação do cliente
- */
+import { schema, rules } from '@ioc:Adonis/Core/Validator';
 
-import { object, SchemaOf, string } from 'yup';
-
-import { CreateUserDtos } from '../dtos/User-dtos/create-user.dtos';
-
-const REQUIRED = 'Campo obrigatório';
-
-const schema: SchemaOf<CreateUserDtos> = object ({
-  name: string().required(REQUIRED),
-  email: string().email().required(REQUIRED),
-  password: string().required(REQUIRED),
+export const createUserValidation = schema.create({
+  name: schema.string({ trim: true }),
+  email: schema.string({trim: true}, [
+    rules.email({
+      sanitize: true,
+      ignoreMaxLength: true,
+      domainSpecificValidation: true,
+    })
+  ]),
+  password: schema.string({ trim: true }),
 });
-
-export { schema as createUserValidation };
